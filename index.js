@@ -43,18 +43,18 @@ var deepEqual = require('deep-equal');
  * @param  {Object}   `obj` Object to add the property to.
  * @param  {Function} `name` Name of the property.
  * @param  {Array}    `dependencies` Optional list of properties to depend on.
- * @param  {Function} `getter` Getter function that does the calculation.
+ * @param  {Function} `property` Property object
  * @api public
  * @name  computedProperty
  */
 
-module.exports = function computedProperty (obj, name, dependencies, getter) {
+module.exports = function computedProperty (obj, name, dependencies, property) {
   if (typeof dependencies === 'function') {
-    getter = dependencies;
+    property = dependencies;
     dependencies = [];
   }
-  if (typeof getter !== 'function') {
-    throw new Error('Expected `getter` to be a function but got ' + typeof getter);
+  if (typeof property !== 'object') {
+    throw new Error('Expected `property` to be a object but got ' + typeof property);
   }
 
   dependencies = [].concat.apply([], dependencies);
@@ -65,13 +65,13 @@ module.exports = function computedProperty (obj, name, dependencies, getter) {
   Object.defineProperty(obj, name, {
     configurable: true,
     enumerable: true,
-    get: function () {
+    get: property.get ? function () {
       if (!watch || prev[name] == undefined || changed(prev, this, dependencies)) {
-        prev[name] = getter.call(this);
+        prev[name] = property.get.call(this);
       }
       return prev[name];
-    },
-    set: function () { }
+    } : undefined,
+    set: property.set,
   });
 };
 
