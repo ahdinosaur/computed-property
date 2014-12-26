@@ -10,6 +10,7 @@
 var _ = require('lodash');
 var get = require('get-value');
 var set = require('set-object');
+var deepEqual = require('deep-equal');
 
 /**
  * Add a computed property to an object. This updates
@@ -116,7 +117,7 @@ function changed (prev, current, dependencies) {
   while (len--) {
     var dep = dependencies[i++];
     var value = get(current, dep);
-    if (get(prev, dep) !== value) {
+    if (!deepEqual(get(prev, dep), value)) {
       result = true;
       set(prev, dep, value);
     }
