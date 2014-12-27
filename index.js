@@ -71,10 +71,7 @@ module.exports = function computedProperty (obj, name, dependencies, property) {
       }
       return prev[name];
     } : undefined,
-    set: property.set ? function (newVal) {
-      property.set.call(this, newVal);
-      prev[name] = undefined;
-    } : undefined,
+    set: property.set,
   });
 };
 
