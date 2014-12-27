@@ -122,7 +122,7 @@ function changed (prev, current, dependencies) {
     var value = get(current, dep);
     if (!deepEqual(get(prev, dep), value)) {
       result = true;
-      set(prev, dep, value);
+      set(prev, dep, _.cloneDeep(value));
     }
   }
   return result;
